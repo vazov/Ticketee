@@ -23,6 +23,12 @@ gem 'jbuilder', '~> 2.0'
 # bundle exec rake doc:rails generates the API under doc/api.
 gem 'sdoc', '~> 0.4.0', group: :doc
 
+gem 'bcrypt-ruby'
+gem 'cancan'
+gem 'carrierwave'
+gem 'searcher', :git => "git://github.com/radar/searcher"
+gem 'rails-observers'
+gem 'devise'
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 
@@ -38,6 +44,7 @@ group :development, :test do
   gem 'rspec-rails'
   gem 'capybara'
   gem 'factory_girl_rails'
+  gem 'gmail'
 end
 
 group :development do

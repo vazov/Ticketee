@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+
   <title>
   <% if content_for?(:title) %>
     <%= yield(:title) %>
@@ -8,15 +9,44 @@
     Ticketee
   <% end %>
   </title>
-  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
-  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+
+  <%= stylesheet_link_tag    'application', media: 'all' %>
+  
+  <style>
+  <% for state in @states %>
+  .state_<%= state.name.parameterize %> {
+    background: <%= state.background %>;
+    color: <%= state.color %>;
+  }
+  <% end %>
+  </style>
+
+  <%= javascript_include_tag 'application' %>
   <%= csrf_meta_tags %>
   
+  <%= link_to 'Home', root_url %>
+  <nav>
+    <ul>
+
+    <% if current_user %>
+    Signed in as <%= current_user.email %>
+      <% admins_only do %>
+      <%= link_to "Admin", admin_root_path %>
+      <% end %>
+      <%= link_to "Sign out", signout_path, method: :delete %>
+    <% else %>
+      <li><%= link_to "Sign up", new_user_path %></li>
+      <li><%= link_to "Sign in", signin_path %></li>
+    <% end %>
+    </ul>
+  </nav>
+
   <% flash.each do |key, value| %>
     <div class='flash' id='<%= key %>'>
       <%= value %>
     </div>
   <% end %>
+  
 </head>
 <body>
 

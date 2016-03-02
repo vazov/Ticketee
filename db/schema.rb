@@ -11,13 +11,88 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160219131833) do
+ActiveRecord::Schema.define(version: 20160302105754) do
+
+  create_table "assets", force: :cascade do |t|
+    t.string   "asset"
+    t.integer  "ticket_id"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+    t.string   "content_type"
+  end
+
+  create_table "comments", force: :cascade do |t|
+    t.text     "text"
+    t.integer  "ticket_id"
+    t.integer  "user_id"
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
+    t.integer  "state_id"
+    t.integer  "previous_state_id"
+  end
+
+  create_table "permissions", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "thing_id"
+    t.string   "thing_type"
+    t.string   "action"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "projects", force: :cascade do |t|
     t.string   "name"
     t.string   "description"
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
+  end
+
+  create_table "states", force: :cascade do |t|
+    t.string   "name"
+    t.string   "color"
+    t.string   "background"
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
+    t.boolean  "default",    default: false
+  end
+
+  create_table "tags", force: :cascade do |t|
+    t.string "name"
+  end
+
+  create_table "tags_tickets", id: false, force: :cascade do |t|
+    t.integer "tag_id"
+    t.integer "ticket_id"
+  end
+
+  create_table "ticket_watchers", id: false, force: :cascade do |t|
+    t.integer "user_id"
+    t.integer "ticket_id"
+  end
+
+  create_table "tickets", force: :cascade do |t|
+    t.string   "title"
+    t.text     "description"
+    t.integer  "project_id"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.integer  "user_id"
+    t.integer  "state_id"
+    t.string   "asset"
+  end
+
+  add_index "tickets", ["project_id"], name: "index_tickets_on_project_id"
+  add_index "tickets", ["state_id"], name: "index_tickets_on_state_id"
+  add_index "tickets", ["user_id"], name: "index_tickets_on_user_id"
+
+  create_table "users", force: :cascade do |t|
+    t.string   "name"
+    t.string   "email"
+    t.string   "password_digest"
+    t.datetime "created_at",                           null: false
+    t.datetime "updated_at",                           null: false
+    t.boolean  "admin",                default: false
+    t.string   "authentication_token"
   end
 
 end

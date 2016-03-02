@@ -1,0 +1,43 @@
+  создали ресурс проект
+  With the project resource CRUD done in Chapter 4, the next step is to set up the
+ability to create tickets within the scope of a given project. This chapter explores
+how to set up a nested resource in Rails, defining routing for Ticket resources by
+creating a CRUD interface for them, scoped underneath the projects resource that
+you just created.
+
+  You want to create tickets only for particular projects, so you need a
+New Ticket link on a project’s show page. The link must lead to a form where a
+title and a description for your ticket can be entered, and the form needs a button
+that submits it to a create action in your controller. You also want to ensure the
+data entered is valid, just as you did with the Project model.
+
+<%= link_to "New Ticket", new_project_ticket_path(@project) %>
+
+resources :projects do
+  resources :tickets
+end
+
+rails g controller tickets
+
+def new
+  @ticket = @project.tickets.build
+end
+
+The build method simply instantiates a new record for the tickets
+association on the @project object, working in much the same way as the
+following code would:
+Ticket.new(project_id: @project.id)
+
+In this chapter, you’ll build authentication with ActiveModel::HasSecurePassword . This comes with Rails (as part of ActiveModel ) and is very, very minimal: it only handles the cryptography
+portion of authentication.
+
+rails g model user name email password_digest
+rake db:migrate db:test:prepare
+
+You'll track which users are administrators by putting a boolean field called
+admin in the users table. This is the most basic form of user authorization , which
+is not to be confused with authentication , which you implemented in chapter 6.
+Authentication is the process users go through to confirm their identity, while
+authorization is the process used by the system to determine which users should
+have access to certain things.
+

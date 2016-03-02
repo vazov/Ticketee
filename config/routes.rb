@@ -1,8 +1,59 @@
 Rails.application.routes.draw do
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
+  namespace :admin do
+    root :to => "base#index"
+    resources :users do
+      resources :permissions
+      put "permissions", to: "permissions#set", as: "set_permissions"
+    end
+    resources :states do
+      member do
+        get :make_default
+      end
+    end
+  end
+
+  
   root "projects#index"
-  resources :projects
+
+  resources :projects do
+    resources :tickets do
+      collection do
+        get :search
+      end
+
+      member do
+        post :watch
+      end
+    end
+  end
+  
+  resources :tickets do
+    resources :comments
+    resources :tags do
+      member do
+        delete :remove
+      end
+    end
+  end
+  
+  resources :users
+
+  get "/signin", to: "sessions#new"
+  delete "/signout", to: "sessions#destroy", as: "signout"
+  post "/signin", to: "sessions#create"
+  
+  resources :files
+  
+  namespace :api do 
+    namespace :v1 do 
+      resources :projects do
+        resources :tickets
+      end
+    end
+  end
+  
   # You can have the root of your site routed with "root"
   # root 'welcome#index'
 
